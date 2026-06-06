@@ -6,15 +6,21 @@ This document serves as the extended technical appendix to the Enterprise Credit
 
 ## 1. Data Governance & Pipeline Yield 
 
-Commercial ledger data frequently contains critical entry errors, such as null disbursement dates or mathematically impossible loan guarantees. The `gatekeeper.py` pipeline acts as a strict automated firewall.
+Commercial ledger data frequently contains critical entry errors, such as null disbursement dates or mathematically impossible loan guarantees. The `gatekeeper.py` pipeline acts as a strict automated firewall to protect the data warehouse.
 
 ### Pipeline Yield Metrics
-* **Total Raw Ingestion:** 890,453 records
-* **Passed Validation (Clean):** 447,987 records
+* **Total Raw Ingestion:** 898,155 records
+* **Passed Validation (Clean):** 455,689 records
 * **Quarantined (Malformed):** 442,466 records
-* **Pipeline Yield Rate:** **50.3%**
+* **Pipeline Yield Rate:** **50.7%**
 
-*Business Impact:* By intercepting over 442,000 malformed rows *before* they enter the PostgreSQL warehouse, we prevent downstream executive dashboards from displaying artificially inflated or corrupted portfolio balances.
+### Top Quarantine Drivers
+The pipeline intercepted over 442,000 malformed rows based on strict business logic. The primary drivers of data corruption were:
+1. **`ERR_CORRUPT_REVFLAG` (231,240 records):** Severe formatting issues or conflicting data types within the revolving line of credit indicator.
+2. **`ERR_MISSING_CRITICAL_MARKERS` (202,573 records):** Null values in mandatory identifier fields required for downstream relational joins.
+3. **`ERR_APPV_EXCEEDS_GROSS` (8,653 records):** Mathematical impossibilities where the recorded bank approval amount exceeded the total gross disbursement of the loan.
+
+*Business Impact:* By intercepting these corrupted records *before* they enter the PostgreSQL warehouse, we prevent downstream executive dashboards from displaying artificially inflated or mathematically invalid portfolio balances.
 
 ---
 
