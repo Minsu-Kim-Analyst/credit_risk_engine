@@ -14,8 +14,8 @@ Using the pristine data, a machine learning classification model is deployed to 
 
 ### 📊 Key Business Outcomes:
 * **Risk Mitigation:** Successfully identified **79%** of historical loan defaults by tuning a Logistic Regression model to prioritize recall (ROC-AUC: 0.82), protecting against catastrophic principal loss.
-* **Data Governance:** Intercepted and quarantined **442,000+** logically invalid financial records (50.7% yield rate) to prevent downstream reporting corruption.
-* **Strategic Insight:** Engineered SQL Common Table Expressions (CTEs) to map macroeconomic exposure, revealing a severe **33.6% charge-off rate** within the highly leveraged Finance & Insurance sector.
+* **Data Governance:** Intercepted and quarantined **442,000+** logically invalid financial records (50.3% yield rate) to prevent downstream reporting corruption.
+* **Strategic Insight:** Engineered SQL Common Table Expressions (CTEs) to map macroeconomic exposure, revealing a severe **33.69% charge-off rate** within the highly leveraged Finance & Insurance sector.
 
 ---
 
@@ -23,21 +23,37 @@ Using the pristine data, a machine learning classification model is deployed to 
 
 ```text
 credit_risk_project/
+├── .env                       # Local database credentials (Ignored by Git)
+├── .gitignore                 # Enterprise security and system file exclusions
+├── README.md                  # Project documentation and setup guide
+├── requirements.txt           # Strict version-pinned Python dependencies
+├── assets/                    # Rendered UI components for repository documentation
+│   ├── risk_map.png           # Portfolio risk geolocation chart
+│   └── scorecard.png          # Data governance pipeline yield visualization
+├── dashboards/                # Front-End Executive Analytics
+│   └── portfolio_risk.py      # Streamlit production dashboard application
 ├── data/                      # Local data storage (Ignored by Git for security)
-│   ├── raw/                   # Raw 890k+ federal ledger records
 │   ├── clean/                 # Validated rows processed by Python pipeline
-│   └── quarantine/            # Corrupted rows isolated with exact error codes
-├── sql/                       # Relational Database Architecture
-│   ├── 01_ddl_schema.sql      # Star Schema table creation
-│   └── 05_risk_analysis.sql   # Advanced CTE risk aggregation queries
-├── src/                       # Core Python ETL logic
-│   ├── sba_profiler.py        # Automated missing-value and type detection
-│   └── gatekeeper.py          # The automated validation and routing pipeline
-├── models/                    # Machine Learning Ecosystem
-│   ├── notebooks/             # Jupyter notebooks for feature engineering
-│   └── saved_models/          # Serialized .joblib models for production UI
-└── dashboards/                # Front-End Analytics
-    └── portfolio_risk.py      # Streamlit executive dashboard
+│   ├── quarantine/            # Corrupted rows isolated with exact error codes
+│   └── raw/                   # Raw federal ledger records expecting CSV injection
+├── docs/                      # Technical Appendices & Reporting
+│   └── deep_dive_findings.md  # Comprehensive model evaluation & SQL audit findings
+├── models/
+│   └── notebooks/             # Model Development Environment
+│       └── credit_scoring_train.ipynb # Feature engineering & model training pipeline
+├── scripts/                   # Automated Environment Utilities
+│   └── generate_requirements.py # Custom Python script for strict dependency tracking
+├── sql/                       # Relational Database Architecture & ELT Scripts
+│   ├── 01_ddl_schema.sql      # Star Schema production table definitions
+│   ├── naics_mapping.sql      # Dimensional mapping for macro-sectors
+│   ├── staging_and_mapping.sql # Raw data transformation and alignment
+│   ├── populate_schema.sql    # Production data loading execution
+│   ├── risk_analysis.sql      # Advanced analytical CTE portfolio queries
+│   ├── stage_quarantine.sql   # Data isolation layer infrastructure
+│   └── insert_quarantine.sql  # Automated routing for corrupted records
+└── src/                       # Core Python ETL & Governance Engine
+    ├── gatekeeper.py          # Data validation firewall pipeline
+    └── sba_profiler.py        # Automated schema and missing-value profiler
 ```
 
 ---
@@ -74,7 +90,8 @@ credit_risk_project/
 
 ## 🚀 Local Deployment & Setup
 
-*Note: For security and compliance, the raw commercial dataset and the local `.env` database credentials are deliberately excluded from this repository via `.gitignore`.*
+> **⚠️ Data Privacy & Compliance Notice**
+> The raw 890,000-row commercial loan dataset and the local `.env` database credentials have been strictly excluded from this repository via `.gitignore` to comply with financial data privacy standards and GitHub storage limits. The source code is provided for architectural demonstration. To run the pipeline locally, place a compatible CSV into the `data/raw/` directory matching the schema defined in `sql/01_ddl_schema.sql`.
 
 **1. Clone the repository**
 ```bash
@@ -86,10 +103,15 @@ cd credit_risk_engine
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows use: venv\Scripts\activate
+```
+
+**3. Freeze and audit dependencies automatically**
+```bash
+python scripts/generate_requirements.py
 pip install -r requirements.txt
 ```
 
-**3. Configure secure environment variables**
+**4. Configure secure environment variables**
 Create a `.env` file in the root directory to map your local PostgreSQL instance:
 ```text
 DB_USER=postgres
@@ -99,7 +121,10 @@ DB_PORT=5432
 DB_NAME=credit_risk_db
 ```
 
-**4. Deploy the full-stack dashboard**
+**5. Deploy the full-stack dashboard**
 ```bash
 streamlit run dashboards/portfolio_risk.py
 ```
+
+---
+*Developed as a comprehensive Business Analytics and Data Engineering portfolio initiative.*
