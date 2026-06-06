@@ -103,6 +103,3 @@ DB_NAME=credit_risk_db
 ```bash
 streamlit run dashboards/portfolio_risk.py
 ```
-
----
-*Developed as a comprehensive Business Analytics and Data Engineering portfolio initiative.*
