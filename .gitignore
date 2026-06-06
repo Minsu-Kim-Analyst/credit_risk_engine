@@ -1,8 +1,21 @@
+# Environments and Secrets
 venv/
+.env
+
+# Data (Keep raw and quarantine data local)
 data/
+
+# Python Cache
 __pycache__/
 *.pyc
+
+# Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
+
+# Serialized Machine Learning Models
 models/saved_models/*.pkl
 models/saved_models/*.joblib
-.env
+
+# OS Generated Files
+.DS_Store
+**/.DS_Store
